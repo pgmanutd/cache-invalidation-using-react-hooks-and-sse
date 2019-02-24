@@ -2,6 +2,24 @@
 
 Cache (used local storage for caching API response) invalidation using React hooks and SSE 🤗
 
+## Development
+
+Checkout [the repository](https://github.com/pgmanutd/cache-invalidation-using-react-hooks-and-sse)
+
+Open your favorite Terminal and run these commands:
+
+```bash
+cd cache-invalidation-using-react-hooks-and-sse
+
+yarn install
+
+yarn start:server
+
+yarn start
+```
+
+_☝ Run last two commands in separate terminals_
+
 ## Available Scripts
 
 In the project directory, you can run:
