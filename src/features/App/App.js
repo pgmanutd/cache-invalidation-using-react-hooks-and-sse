@@ -1,27 +1,26 @@
 import React, { useEffect } from 'react';
 
-import parseJSON from '../utils/parseJSON';
+import { parseJSON } from '../../shared/utils';
 
-import useStorageCacheInvalidate from '../hooks/useStorageCacheInvalidate';
-import useFetch from '../hooks/useFetch';
+import { useStorageCacheInvalidation, useFetch } from '../../shared/hooks';
 
 const App = () => {
-  const [storedItem, setItem] = useStorageCacheInvalidate({
+  const [storedItem, setItem] = useStorageCacheInvalidation({
     key: 'data',
     initialValue: null,
     url: 'http://localhost:3001/stream',
     canInvalidateCache: data =>
       !!parseJSON(data, { invalidateCache: false }).invalidateCache
   });
-  const cacheNotPresent = !storedItem;
+  const isCacheInvalidated = !storedItem;
 
   const { data, isLoading } = useFetch({
     url: 'https://reqres.in/api/users?delay=3',
-    shouldFetch: cacheNotPresent
+    shouldFetch: isCacheInvalidated
   });
 
   useEffect(() => {
-    if (cacheNotPresent) {
+    if (isCacheInvalidated) {
       setItem(data);
     }
   }, [data]);
@@ -30,8 +29,8 @@ const App = () => {
     <section>
       <pre>
         <code>
-          {cacheNotPresent || isLoading
-            ? 'Fetching data and updating cache...'
+          {isCacheInvalidated || isLoading
+            ? 'Fetching users and updating cache...'
             : JSON.stringify(storedItem, null, 2)}
         </code>
       </pre>

@@ -8,18 +8,21 @@ const reducer = (state, { type, data, error }) => {
   switch (type) {
     case 'pending':
       return {
+        ...state,
         isLoading: true,
         data: defaultInitialState.data,
         error: defaultInitialState.error
       };
     case 'success':
       return {
+        ...state,
         isLoading: defaultInitialState.isLoading,
         data,
         error: defaultInitialState.error
       };
     case 'error':
       return {
+        ...state,
         data: defaultInitialState.data,
         isLoading: defaultInitialState.isLoading,
         error
@@ -32,11 +35,13 @@ const reducer = (state, { type, data, error }) => {
 const useFetch = ({ url, initialState, shouldFetch = true }) => {
   const [state, dispatch] = useReducer(reducer, initialState, init);
 
-  const fetchUrl = async () => {
+  const fetchUrl = async ({ signal }) => {
     dispatch({ type: 'pending' });
 
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        signal,
+      });
       const json = await response.json();
 
       dispatch({ type: 'success', data: json });
@@ -46,7 +51,13 @@ const useFetch = ({ url, initialState, shouldFetch = true }) => {
   };
 
   useEffect(() => {
-    shouldFetch && fetchUrl();
+    const controller = new AbortController();
+
+    shouldFetch && fetchUrl({ signal: controller.signal });
+
+    return () => {
+      controller.abort();
+    };
   }, [shouldFetch, url]);
 
   return state;

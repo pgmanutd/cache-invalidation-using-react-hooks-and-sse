@@ -1,21 +1,21 @@
 import useLocalStorage from './useLocalStorage';
 import useSSE from './useSSE';
 
-const useStorageCacheInvalidate = ({
+const useStorageCacheInvalidation = ({
   key,
   initialValue,
   url,
   canInvalidateCache
 }) => {
   const [storedItem, setItem, removeItem] = useLocalStorage(key, initialValue);
-  const [sseData, setSSEData] = useSSE(url);
 
-  if (canInvalidateCache(sseData)) {
-    removeItem();
-    setSSEData();
-  }
+  useSSE(url, (data) => {
+    if (canInvalidateCache(data)) {
+      removeItem();
+    }
+  });
 
   return [storedItem, setItem];
 };
 
-export default useStorageCacheInvalidate;
+export default useStorageCacheInvalidation;
