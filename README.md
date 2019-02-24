@@ -1,6 +1,6 @@
 # 🎉 Cache (local storage) invalidation using React hooks and SSE
 
-Cache (used local storage for caching API response) invalidation using React hooks and SSE :)
+Cache (used local storage for caching API response) invalidation using React hooks and SSE 🤗
 
 ## Available Scripts
 
